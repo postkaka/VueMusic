@@ -6,7 +6,7 @@
         <swiper :banner="arrUrl" class="swiper"></swiper>
         <scroll class="wrapper">
             <div class="recommend">
-                <recommend></recommend>
+                <recommend class="_recommned"></recommend>
             </div>
         </scroll>
     </div>
@@ -71,9 +71,12 @@
     .recommend {
         width: 1000px;
         position: relative;
-        left:180px;
+        margin: auto;
         margin-top: 20px;
         height: 100%;
+
+    }
+    ._recommned {
     }
     .wrapper {
         overflow: hidden;
