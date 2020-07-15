@@ -13,5 +13,10 @@
         height: 49px;
         width: 100%;
         background-color: #202023;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 9;
     }
 </style>

@@ -54,12 +54,12 @@
 
 <style scoped>
     .information-bar {
-        position: absolute;
+        position: fixed;
         top:49px;
         bottom: 49px;
         right: 0;
         left: 0;
-        width: 150px;
+        width: 200px;
         background-color: #191B1f;
 
     }

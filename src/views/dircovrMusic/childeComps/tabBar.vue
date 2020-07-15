@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="tab-bar">
         <el-menu background-color="#16181c" text-color="#828485" mode="horizontal">
             <el-menu-item v-for="(item,index) in list" :key="item.id" class="item"
             :class="{active: index === currentIndex}" @click="itemClick(index)"
@@ -27,12 +27,14 @@
 </script>
 
 <style scoped>
+    .el-menu.el-menu--horizontal {
+        border-bottom: none;
+    }
     .item {
         margin-left: 10px;
         margin-right: 10px;
     }
     .active span {
-        margin-top: 40px;
         border-bottom: 2px solid #404245;
     }
 </style>
