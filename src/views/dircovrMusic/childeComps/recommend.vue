@@ -11,31 +11,20 @@
 </template>
 
 <script>
-    import {_getrecommend} from "../../../network/dircoverMusic"
     import SongList from "../../../components/content/song list/SongList";
     export default {
         name: "recommend",
         components: {
             SongList
         },
-        data() {
-            return {
-                infrom:[]
+        props:{
+            infrom: {
+                type: Array,
+                default() {
+                    return []
+                }
             }
         },
-        created() {
-            this.getrecommend()
-        },
-        methods: {
-            getrecommend() {
-                _getrecommend().then( res => {
-                    for(let i = 0; i<res.result.length; i++){
-                        this.infrom.push(res.result[i])
-                    }
-                    console.log(this.infrom);
-                })
-            }
-        }
     }
 </script>
 

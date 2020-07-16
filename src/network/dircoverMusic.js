@@ -7,6 +7,16 @@ export function _getBanner() {
 }
 export  function _getrecommend() {
     return request({
-        url: "/personalized",
+        url: "/personalized"
+    })
+}
+export  function _getPrivatecontent() {
+    return request({
+        url: "/personalized/privatecontent"
+    })
+}
+export  function _getNewSong() {
+    return request({
+        url:"/personalized/newsong"
     })
 }
