@@ -20,3 +20,11 @@ export  function _getNewSong() {
         url:"/personalized/newsong"
     })
 }
+export  function _getSongUrl(id) {
+    return request({
+        url:'/song/url',
+        params :{
+            id
+        }
+    })
+}

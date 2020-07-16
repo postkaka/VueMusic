@@ -10,20 +10,8 @@
         <template class="exclusive">
             <exclusive :broadcast="broadcast"></exclusive>
         </template>
-        <template class="newSong">
-            <new-song :newSongList="newSongList"></new-song>
-        </template>
-        <div>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
+        <div class="newSong">
+            <new-song :newSongList="newSongList" @clickSongs="clickSongs" ></new-song>
         </div>
 
     </div>
@@ -35,7 +23,7 @@
     import recommend from "./childeComps/recommend";
     import exclusive from "./childeComps/exclusive";
     import NewSong from "./childeComps/NewSong";
-    import {_getBanner,_getPrivatecontent,_getrecommend,_getNewSong} from "../../network/dircoverMusic";
+    import {_getBanner,_getPrivatecontent,_getrecommend,_getNewSong,_getSongUrl} from "../../network/dircoverMusic";
     import Swiper from "../../components/common/swiper/swiper";
 
     export default {
@@ -45,7 +33,10 @@
                 arrUrl:[],
                 infrom:[],
                 broadcast:[],
-                newSongList:[]
+                newSongList:[],
+                songID:null,
+                SongUrl:null
+
 
             }
         },
@@ -93,8 +84,22 @@
                     for(let i = 0; i < res.result.length; i++){
                         this.newSongList.push(res.result[i])
                     }
-                    console.log(this.newSongList);
                 })
+            },
+            //5.获取音乐的url地址
+            getSongUrl() {
+                _getSongUrl(this.songID).then(res =>{
+                    this.SongUrl = res.data[0].url
+                })
+            },
+
+
+            //点击歌曲后获取当前歌曲id
+            clickSongs(id) {
+                this.songID = id
+                this.getSongUrl()
+                //console.log(this.SongUrl);
+                this.$bus.$emit("clickSongs",this.SongUrl)
             }
 
         }
@@ -129,10 +134,12 @@
         position: relative;
         margin: auto;
     }
-    /*.newSong {*/
-    /*    width: 1000px;*/
-    /*    position:relative;*/
-    /*    margin: auto;*/
-    /*    height: 100%;*/
-    /*}*/
+    .newSong {
+        width: 1000px;
+        position:relative;
+        margin: auto;
+        height: 100%;
+        margin-top: 20px;
+        padding-bottom: 30px;
+    }
 </style>

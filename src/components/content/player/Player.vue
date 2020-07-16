@@ -1,12 +1,22 @@
 <template>
     <div class="player">
-        <audio src=""></audio>
+        <audio :src="Url" controls="controls" autoplay="autoplay"></audio>
     </div>
 </template>
 
 <script>
     export default {
-        name: "Player"
+        name: "Player",
+        data() {
+            return{
+                Url: null
+            }
+        },
+        mounted() {
+            this.$bus.$on("clickSongs",(SongUrl) => {
+                this.Url = SongUrl
+            })
+        }
     }
 </script>
 
@@ -19,5 +29,8 @@
         left: 0;
         right: 0;
         bottom: 0;
+    }
+    .player audio {
+
     }
 </style>
