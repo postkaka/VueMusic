@@ -1,9 +1,6 @@
 <template>
     <div class="dircovr-music">
-        <div class="bag">
-            <tab-bar class="tab-bar"></tab-bar>
-        </div>
-            <swiper :banner="arrUrl" class="swiper"></swiper>
+        <swiper :banner="arrUrl" class="swiper"></swiper>
         <template class="recommend">
             <recommend class="_recommned" :infrom="infrom"></recommend>
         </template>
@@ -19,7 +16,6 @@
 </template>
 
 <script>
-    import tabBar from "./childeComps/tabBar";
     import recommend from "./childeComps/recommend";
     import exclusive from "./childeComps/exclusive";
     import NewSong from "./childeComps/NewSong";
@@ -41,7 +37,6 @@
             }
         },
         components: {
-            tabBar,
             Swiper,
             recommend,
             exclusive,
@@ -108,17 +103,13 @@
 
 <style scoped>
     .dircovr-music {
-        position: relative;
-        left: 200px;
-        background-color: #16181c;
-        width: calc(100% - 200px);
-        top: 49px;
+        /*position: relative;*/
+        /*left: 200px;*/
+        /*background-color: #16181c;*/
+        /*width: calc(100% - 200px);*/
+        /*top: 49px;*/
     }
-    .bag {
-        display: flex;
-        justify-content: center;
-        height:70px
-    }
+
     .swiper {
         padding-top: 10px;
     }

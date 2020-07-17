@@ -28,3 +28,18 @@ export  function _getSongUrl(id) {
         }
     })
 }
+export  function _getHot() {
+    return request({
+        url:'/playlist/hot'
+    })
+}
+export function _getMenu(cat,limit) {
+    return request({
+        url:'/top/playlist',
+        params :{
+            cat: cat,
+            limit: 36
+        }
+    })
+
+} 

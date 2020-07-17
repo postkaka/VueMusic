@@ -1,9 +1,8 @@
 <template>
     <div class="tab-bar">
-        <el-menu background-color="#16181c" text-color="#828485" mode="horizontal">
-            <el-menu-item v-for="(item,index) in list" :key="item.id" class="item"
-            :class="{active: index === currentIndex}" @click="itemClick(index)"
-            ><span>{{item}}</span>
+        <el-menu background-color="#16181c" text-color="#828485" mode="horizontal" router >
+            <el-menu-item v-for="(item,index) in list" :key="item.id" class="item" :index="item.path"
+            ><span>{{item.name}}</span>
             </el-menu-item>
         </el-menu>
     </div>
@@ -14,13 +13,14 @@
         name: "tabBar",
         data() {
             return{
-                list:["个性推荐","歌单","排行榜","歌手","最新音乐","主播电台"],
-                currentIndex: 0
-            }
-        },
-        methods: {
-            itemClick(index){
-                this.currentIndex = index
+                list:[
+                    {path:'/dircovr/dircovrMusic',name:'个性推荐'},
+                    {path:'/dircovr/songMenu',name:'歌单'},
+                    {path:'/dircovr/top',name:'排行榜'},
+                    {path:'/dircovr/singer',name:'歌手'},
+                    {path:'/dircovr/newSongs',name:'最新音乐'},
+                    {path:'/dircovr/radio',name:'主播电台'}
+                    ]
             }
         }
     }
