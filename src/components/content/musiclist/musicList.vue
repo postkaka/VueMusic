@@ -1,8 +1,9 @@
 <template>
     <div>
+        <slot></slot>
         <div class="recommend-list">
-            <song-list :infrom="infrom" v-for="(item,index) in infrom" :key="index" class="song-list">
-                <img :src="item.coverImgUrl" alt="">
+            <song-list :infrom="infrom" v-for="(item,index) in infrom" :key="index" class="song-list" >
+                <img :src="item.coverImgUrl" @err="imgErr(item)" alt="">
                 <div>{{item.name}}</div>
             </song-list>
         </div>
@@ -23,6 +24,11 @@
         },
         components:{
             SongList
+        },
+        methods: {
+            imgErr(item){
+                item.coverImgUrl = require(item.img1v1Url)
+            }
         }
     }
 </script>

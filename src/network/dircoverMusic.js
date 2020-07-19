@@ -42,4 +42,21 @@ export function _getMenu(cat,limit) {
         }
     })
 
-} 
+}
+//获取排行榜数据
+export function _getTop() {
+    return request({
+        url:'/toplist'
+    })
+}
+//获取歌手数据
+export function _getSinger(type,area) {
+    return request({
+        url:"/artist/list",
+        params :{
+            type:-1,
+            area:-1
+        }
+    })
+
+}
