@@ -1,16 +1,24 @@
 <template>
     <div>
-        <div>
+        <div class="text">
             <div class="area">
                 <div>语种:</div>
-                <span v-for="(item,index) in area" :key="item.key">{{item.name}}</span>
+                <span v-for="(item,index) in area"
+                      :key="item.key"
+                      :class="{active: currentIndex === item.key}"
+                      @click="areaClick(item.key)"
+                >{{item.name}}</span>
             </div>
             <div class="type">
                 <div>分类:</div>
-                <span v-for="(item,index) in type" :key="item.key">{{item.name}}</span>
+                <span v-for="(item,index) in type"
+                      :key="item.key"
+                      :class="{_active: currentIndex1 === item.key}"
+                      @click="typeClick(item.key)"
+                >{{item.name}}</span>
             </div>
         </div>
-        <div>
+        <div class="recommend">
             <music-list :infrom="infrom"></music-list>
         </div>
 
@@ -39,7 +47,9 @@
                     {name:"韩国",key:16},
                     {name:"其他",key:0}
                 ],
-                infrom:[]
+                infrom:[],
+                currentIndex: -1,
+                currentIndex1: -1
             }
         },
         components: {
@@ -49,22 +59,59 @@
             this.getSinger()
         },
         methods: {
-            getSinger(){
-                _getSinger().then(res => {
-                    console.log(res);
+            getSinger(type,area){
+                _getSinger(type,area).then(res => {
                     this.infrom = res.artists
-                    console.log(this.infrom);
                 })
+            },
+            areaClick(key){
+                this.currentIndex = key
+                this.getSinger(this.currentIndex1,this.currentIndex)
+            },
+            typeClick(key){
+                this.currentIndex1 = key
+                this.getSinger(this.currentIndex1,this.currentIndex)
+
             }
         }
     }
 </script>
 
 <style scoped>
+    .text {
+        position: relative;
+        margin: auto;
+        width: 1000px;
+    }
     .area {
         display: flex;
+        color: white;
+    }
+    .area span {
+        color: white;
+        margin-left: 20px;
+        margin-bottom: 10px;
     }
     .type {
         display: flex;
+        color: white;
+    }
+    .type span {
+        color: white;
+        margin-left: 20px;
+    }
+    .recommend {
+        width: 1000px;
+        position: relative;
+        margin: auto;
+        margin-top: 20px;
+        height: 100%;
+        padding-bottom: 50px;
+    }
+    .area .active {
+        color: red;
+    }
+    .type ._active {
+        color: red;
     }
 </style>

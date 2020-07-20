@@ -54,8 +54,18 @@ export function _getSinger(type,area) {
     return request({
         url:"/artist/list",
         params :{
-            type:-1,
-            area:-1
+            type:type,
+            area:area
+        }
+    })
+
+}
+//获取最新音乐
+export function _getNewSongs(type) {
+    return request({
+        url:"/top/song",
+        params: {
+            type: type
         }
     })
 

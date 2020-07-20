@@ -2,8 +2,8 @@
     <div>
         <slot></slot>
         <div class="recommend-list">
-            <song-list :infrom="infrom" v-for="(item,index) in infrom" :key="index" class="song-list" >
-                <img :src="item.coverImgUrl" @err="imgErr(item)" alt="">
+            <song-list :infrom="infrom" v-for="(item,index) in infrom" :key="index" class="song-list">
+                <img :src="imgUrl(item)" >
                 <div>{{item.name}}</div>
             </song-list>
         </div>
@@ -14,6 +14,11 @@
     import SongList from "../song list/SongList";
     export default {
         name: "musicList",
+        data() {
+            return{
+                url: null
+            }
+        },
         props:{
             infrom: {
                 type: Array,
@@ -26,8 +31,12 @@
             SongList
         },
         methods: {
-            imgErr(item){
-                item.coverImgUrl = require(item.img1v1Url)
+            imgUrl(item){
+                if(item.coverImgUrl){
+                 return item.coverImgUrl
+                }else {
+                   return  item.picUrl
+                }
             }
         }
     }

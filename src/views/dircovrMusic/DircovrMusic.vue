@@ -1,9 +1,11 @@
 <template>
     <div class="dircovr-music">
         <swiper :banner="arrUrl" class="swiper"></swiper>
-        <template class="recommend">
-            <recommend class="_recommned" :infrom="infrom"></recommend>
-        </template>
+        <div class="recommend">
+           <music-list :infrom="infrom">
+               <div class="text">推荐歌单</div>
+           </music-list>
+        </div>
         <template class="exclusive">
             <exclusive :broadcast="broadcast"></exclusive>
         </template>
@@ -16,7 +18,7 @@
 </template>
 
 <script>
-    import recommend from "./childeComps/recommend";
+    import musicList from "../../components/content/musiclist/musicList";
     import exclusive from "./childeComps/exclusive";
     import NewSong from "./childeComps/NewSong";
     import {_getBanner,_getPrivatecontent,_getrecommend,_getNewSong,_getSongUrl} from "../../network/dircoverMusic";
@@ -38,9 +40,9 @@
         },
         components: {
             Swiper,
-            recommend,
             exclusive,
-            NewSong
+            NewSong,
+            musicList
         },
         created() {
             this.getBanner()
@@ -108,6 +110,10 @@
         /*background-color: #16181c;*/
         /*width: calc(100% - 200px);*/
         /*top: 49px;*/
+    }
+    .text {
+        color: white;
+        margin-bottom: 10px;
     }
 
     .swiper {
