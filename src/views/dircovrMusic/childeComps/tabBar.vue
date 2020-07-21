@@ -19,7 +19,7 @@
                     {path:'/dircovr/top',name:'排行榜'},
                     {path:'/dircovr/singer',name:'歌手'},
                     {path:'/dircovr/newSongs',name:'最新音乐'},
-                    {path:'/dircovr/radio',name:'主播电台'}
+                    {path:'/dircovr/radio',name:'热门电台'}
                     ]
             }
         }

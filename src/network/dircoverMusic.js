@@ -70,3 +70,9 @@ export function _getNewSongs(type) {
     })
 
 }
+//获取电台数据
+export function _getRadio() {
+    return request({
+        url:'/dj/hot'
+    })
+}
