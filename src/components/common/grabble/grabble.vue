@@ -5,23 +5,25 @@
                          :fetch-suggestions="query"
                          v-model="content"
                          @select="handleSelect"
+                         :debounce=0
         >
-            <template slot-scope="{item}">
-                <div>{{item.first}}</div>
+            <template slot-scope="{ item }">
+            <div class="name">{{ item }}</div>
             </template>
         </el-autocomplete>
     </div>
 </template>
 
 <script>
-    import {_getSearch,_getHotList} from "../../../network/homePage";
+    import {_getSearch,_getHotList,_getOffer} from "../../../network/homePage";
 
     export default {
         name: "grabble",
         data() {
             return {
-                content: null,
-                diseaseList: []
+                content: "",
+                diseaseList: [],
+
             }
         },
 
@@ -32,26 +34,50 @@
             //获取热搜列表
             getHotList(){
               _getHotList().then(res =>{
-                  this.diseaseList = res.result.hots
-                  console.log(this.diseaseList);
+                  for(let i = 0;i < res.result.hots.length;i++){
+                      this.diseaseList.push(res.result.hots[i].first)
+                  }
+
               })
             },
             query(queryString, cb) {
-                let diseaseList = this.diseaseList;
-                let result = queryString ? diseaseList.filter(this.createFilter(queryString)):diseaseList;
-                cb(result)
+                console.log("变化了", queryString);
+                if(this.content == ''){
+                    cb(this.diseaseList)
+                }else if(this.content !== '') {
+                    console.log("有内容");
+                    this.getOffer(queryString)
+                    cb(this.diseaseList)
 
-            },
-            createFilter(queryString){
-                return (content) =>{
-                    return(
-                        content.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1
-                        //改为===0 就是筛选的数据只是首字匹配的列表项，需要包含输入字的所有列表项改为！==-1
-                    )
                 }
             },
+
             handleSelect(item) {
-                console.log(item);
+                this.content = item
+                _getSearch(item).then(res => {
+                    console.log(res);
+                })
+            },
+            //获取搜索建议数据
+            getOffer(content){
+                    _getOffer(content).then(res =>{
+                        this.diseaseList = []
+                        if(res.result.songs){
+                            for(let i = 0; i <res.result.songs.length; i++){
+                                this.diseaseList.push(res.result.songs[i].name)
+                            }
+                        }else if(res.result.albums){
+                            for(let i = 0; i <res.result.albums.length; i++){
+                                this.diseaseList.push(res.result.albums[i].name)
+                            }
+                        }else{
+                            for(let i = 0; i <res.result.artists.length; i++){
+                                this.diseaseList.push(res.result.artists[i].name)
+                            }
+                        }
+
+                    })
+
             }
         }
     }
