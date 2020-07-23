@@ -57,6 +57,7 @@
                     for(let i =0;i< res.banners.length;i++){
                         this.arrUrl.push(res.banners[i].imageUrl)
                     };
+                    //console.log(this.arrUrl);
                 })
             },
             //2.获取推荐歌单数据
@@ -65,6 +66,7 @@
                     for(let i = 0; i<res.result.length; i++){
                         this.infrom.push(res.result[i])
                     }
+                   // console.log(this.infrom);
                 })
             },
             //3.获取独家放送数据

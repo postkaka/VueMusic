@@ -1,5 +1,6 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
+import PlayListItem from "../views/Playlist/childeComps/PlayListItem";
 
 const Dircovr = () => import("../views/dircovrMusic/Dircovr")
 const DircovrMusic = () => import("../views/dircovrMusic/DircovrMusic")
@@ -8,6 +9,7 @@ const Top = () => import("../views/dircovrMusic/childerouter/Top")
 const Singer = () => import("../views/dircovrMusic/childerouter/Singer")
 const NewSongs = () => import("../views/dircovrMusic/childerouter/NewSongs")
 const Radio = () => import("../views/dircovrMusic/childerouter/Radio")
+const PlayList = () => import("../views/Playlist/PlayList")
 
 Vue.use(VueRouter)
 
@@ -49,6 +51,11 @@ const routes = [
                 component: Radio
             }
         ]
+    },
+    {
+        path: '/playList/:id',
+        component: PlayList,
+
     }
 ]
 

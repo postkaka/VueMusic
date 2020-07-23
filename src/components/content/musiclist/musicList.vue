@@ -2,8 +2,8 @@
     <div>
         <slot></slot>
         <div class="recommend-list">
-            <song-list :infrom="infrom" v-for="(item,index) in infrom" :key="index" class="song-list">
-                <img :src="imgUrl(item)" >
+            <song-list :infrom="infrom" v-for="(item,index) in infrom" :key="item.id" class="song-list">
+                <img :src="imgUrl(item)" @click="songListClick(item.id)">
                 <div>{{item.name}}</div>
             </song-list>
         </div>
@@ -37,6 +37,10 @@
                 }else {
                    return  item.picUrl
                 }
+            },
+            songListClick(id) {
+                //console.log(id);
+                this.$router.push('/playList/' + id)
             }
         }
     }

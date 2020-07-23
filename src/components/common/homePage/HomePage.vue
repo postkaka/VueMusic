@@ -3,7 +3,7 @@
         <div class="ico">
             <img class="ico-one" src="../../../assets/img/HomePage/touxiang.jpeg" alt="">
             <div>离岸音乐</div>
-            <img class="ico-back" src="../../../assets/img/content/back.svg" alt="">
+            <img class="ico-back" src="../../../assets/img/content/back.svg" alt="" @click="back">
         </div>
         <grabble class="grabble"></grabble>
         <div class="landing">
@@ -22,6 +22,11 @@
         name: "HomePage",
         components:{
             grabble
+        },
+        methods: {
+            back() {
+                this.$router.back(-1)
+            }
         }
     }
 </script>
