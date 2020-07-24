@@ -19,7 +19,7 @@
                         <div class="user">{{item.user.nickname}}:</div>
                         <div class="content">{{item.content}}</div>
                     </div>
-                    <div class="time">{{formatDate(item.time)}}</div>
+                    <div class="time">{{timestampToTime(item.time)}}</div>
                 </div>
             </tr>
         </table>
@@ -42,7 +42,20 @@
                 }
             }
         },
-        methods: {}
+        methods: {
+            //时间戳转换
+             timestampToTime(timestamp) {
+                 let date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                 let Y = date.getFullYear() + '年';
+                 let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '月';
+                 let D = date.getDate() + '日';
+                 let h = date.getHours() + ':';
+                 let m = date.getMinutes() + ':';
+                 let s = date.getSeconds();
+                 return Y+M+D+h+m+s;
+                 }
+
+        }
     }
 </script>
 
@@ -98,7 +111,8 @@
     }
     .time {
         margin-left: 10px;
-        margin-top: 5px;
+        margin-top: 10px;
+        color: white;
     }
     .img {
         display: flex;

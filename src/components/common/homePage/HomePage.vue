@@ -7,26 +7,56 @@
         </div>
         <grabble class="grabble"></grabble>
         <div class="landing">
-            <img src="../../../assets/img/content/profile-o.svg" alt="">
-            <div>未登录</div>
+                <img src="../../../assets/img/content/profile-o.svg" alt="" @click="loadingClick">
+                <div @click="loadingClick">未登录</div>
             <img src="../../../assets/img/content/min.svg" alt="">
             <img src="../../../assets/img/content/reset.svg" alt="">
             <img src="../../../assets/img/content/x.svg" alt="">
         </div>
+        <loading class="loading"
+                 :class="{active: currentIndex === 1}"
+                 @xClick="xClick"
+                 @enterClick="enterClick"
+        />
+
     </div>
 </template>
 
 <script>
     import grabble from "../grabble/grabble";
+    import loading from "../../../views/loading/loading";
+    import {_getCellphone} from "../../../network/login"
     export default {
         name: "HomePage",
+        data(){
+            return{
+                currentIndex : 1,
+            }
+        },
         components:{
-            grabble
+            grabble,
+            loading
         },
         methods: {
             back() {
                 this.$router.back(-1)
+            },
+            loadingClick(){
+                this.currentIndex = "-"
+            },
+            xClick(){
+                this.currentIndex = 1
+            },
+            getCellphone(text,password){
+                _getCellphone(text,password).then(res =>{
+                    console.log(res);
+                })
+            },
+            enterClick(text,password){
+                console.log(text,password);
+                this.getCellphone(text,password)
             }
+
         }
     }
 </script>
@@ -82,5 +112,16 @@
         line-height: 49px;
         color: white;
         margin-left: 20px;
+    }
+    .loading {
+        height: 500px;
+        width: 300px;
+        background-color: white;
+        position: absolute;
+        left: 40%;
+        top: 60px;
+    }
+     .active {
+        display: none;
     }
 </style>

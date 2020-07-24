@@ -38,13 +38,15 @@
        </div>
         <play-list-item :tracks="playlist.tracks" :class="{condition: currentIndex !== 0}"></play-list-item>
         <comment :class="{condition: currentIndex !== 1}" :comment="comment" class="comment"></comment>
+        <subscribers :class="{condition: currentIndex !== 2}" :subscribers="subscribers" class="subscribers"></subscribers>
     </div>
 </template>
 
 <script>
-    import {_getPlayList,_getComent} from "../../network/PlayList";
+    import {_getPlayList,_getComent,_getSubscribers} from "../../network/PlayList";
     import PlayListItem from "./childeComps/PlayListItem";
     import comment from "./childeComps/comment";
+    import Subscribers from "./childeComps/Subscribers";
     export default {
         name: "PlayList",
         data(){
@@ -53,17 +55,20 @@
                 playlist: {},
                 tab:["歌曲列表","评论","收藏者"],
                 currentIndex: 0,
-                comment: []
+                comment: [],
+                subscribers: []
             }
         },
         components: {
             PlayListItem,
-            comment
+            comment,
+            Subscribers
         },
         created() {
             this.id = this.$route.params.id
             this.getPlayList(this.id)
             this.getComment(this.id)
+            this.getSubscribers(this.id,75)
         },
         methods:{
             //获取歌单数据
@@ -82,9 +87,16 @@
             getComment(id){
                 _getComent(id).then(res => {
                     this.comment = res.hotComments
-                    console.log(res.hotComments);
+                    //console.log(res.hotComments);
                 })
             },
+            //获取收藏数据
+            getSubscribers(id,limit){
+                _getSubscribers(id,limit).then(res =>{
+                    //console.log(res);
+                    this.subscribers = res.subscribers
+                })
+            }
 
 
         }
@@ -188,6 +200,9 @@
     .comment {
         padding-right: 50px;
         height: 100%;
+        padding-bottom: 60px;
+    }
+    .subscribers {
         padding-bottom: 60px;
     }
 </style>
