@@ -37,7 +37,7 @@
            </div>
        </div>
         <play-list-item :tracks="playlist.tracks" :class="{condition: currentIndex !== 0}"></play-list-item>
-        <comment :class="{condition: currentIndex !== 1}" :comment="comment"></comment>
+        <comment :class="{condition: currentIndex !== 1}" :comment="comment" class="comment"></comment>
     </div>
 </template>
 
@@ -82,7 +82,7 @@
             getComment(id){
                 _getComent(id).then(res => {
                     this.comment = res.hotComments
-                    //console.log(res.hotComments);
+                    console.log(res.hotComments);
                 })
             },
 
@@ -184,5 +184,10 @@
     }
     .condition {
         display: none;
+    }
+    .comment {
+        padding-right: 50px;
+        height: 100%;
+        padding-bottom: 60px;
     }
 </style>
