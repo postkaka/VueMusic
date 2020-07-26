@@ -38,9 +38,13 @@
                    return  item.picUrl
                 }
             },
+            //点击后调整到对应的详情页面
             songListClick(id) {
-                //console.log(id);
-                this.$router.push('/playList/' + id)
+                if(this.infrom[0].alg){
+                    this.$router.push('/playList/' + id)
+                } else {
+                    this.$router.push('/singerContent/' + id)
+                }
             }
         }
     }

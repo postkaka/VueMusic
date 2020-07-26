@@ -46,6 +46,7 @@
             getMenu(item) {
                 _getMenu(item).then(res =>{
                     this.infrom = res.playlists;
+                    //console.log(this.infrom);
                 })
             },
             tagClick(item,index) {

@@ -66,7 +66,7 @@
                     for(let i = 0; i<res.result.length; i++){
                         this.infrom.push(res.result[i])
                     }
-                   // console.log(this.infrom);
+                    console.log(this.infrom);
                 })
             },
             //3.获取独家放送数据

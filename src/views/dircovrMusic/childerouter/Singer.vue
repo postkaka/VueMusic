@@ -62,6 +62,7 @@
             getSinger(type,area){
                 _getSinger(type,area).then(res => {
                     this.infrom = res.artists
+                    console.log(this.infrom);
                 })
             },
             areaClick(key){

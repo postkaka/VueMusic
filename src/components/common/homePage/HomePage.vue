@@ -41,19 +41,23 @@
             back() {
                 this.$router.back(-1)
             },
+            //调用登录页面
             loadingClick(){
                 this.currentIndex = "-"
             },
+            //关闭登陆页面
             xClick(){
                 this.currentIndex = 1
             },
+            //获取用户的信息的网络请求
             getCellphone(text,password){
                 _getCellphone(text,password).then(res =>{
-                    console.log(res);
+                    //console.log(res);
                 })
             },
+            //子组件的点击登陆后调用此方法将账号信息传入
             enterClick(text,password){
-                console.log(text,password);
+                //console.log(text,password);
                 this.getCellphone(text,password)
             }
 

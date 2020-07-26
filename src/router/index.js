@@ -10,6 +10,7 @@ const Singer = () => import("../views/dircovrMusic/childerouter/Singer")
 const NewSongs = () => import("../views/dircovrMusic/childerouter/NewSongs")
 const Radio = () => import("../views/dircovrMusic/childerouter/Radio")
 const PlayList = () => import("../views/Playlist/PlayList")
+const SingerContent = () => import("../views/singerContent/SingerContent")
 
 Vue.use(VueRouter)
 
@@ -56,6 +57,10 @@ const routes = [
         path: '/playList/:id',
         component: PlayList,
 
+    },
+    {
+        path: '/singerContent/:id',
+        component: SingerContent,
     }
 ]
 
