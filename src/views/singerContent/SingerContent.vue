@@ -43,6 +43,10 @@
         <mv-list :mvs="mvs"
                     :class="{show: currentIndex !==1}"
         ></mv-list>
+        <referral
+                :referral="referral"
+                :class="{show: currentIndex !==2}"
+        ></referral>
     </div>
 </template>
 
@@ -51,6 +55,7 @@
     import hotSongs from "./childeComps/hotSongs";
     import albumList from "./childeComps/albumList";
     import MvList from "./childeComps/MvList";
+    import referral from "./childeComps/referral";
     export default {
         name: "SingerContent",
         data(){
@@ -61,13 +66,15 @@
                 currentIndex: 0,
                 hotAlbums: [],
                 song:[],
-                mvs:[]
+                mvs:[],
+                referral:{}
             }
         },
         components: {
             hotSongs,
             albumList,
-            MvList
+            MvList,
+            referral
         },
         created() {
             this.id = this.$route.params.id
@@ -105,6 +112,7 @@
             },
             getDesc(id){
                 _getDesc(id).then(res => {
+                    this.referral = res
                     console.log(res);
                 })
             },
@@ -137,6 +145,7 @@
         color: white;
         line-height: 30px;
         font-size: 24px;
+        margin-left: 5px;
     }
     .img img {
         height: 200px;
