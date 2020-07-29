@@ -88,7 +88,9 @@
             //5.获取音乐的url地址
             getSongUrl() {
                 _getSongUrl(this.songID).then(res =>{
-                    this.SongUrl = res.data[0].url
+                    //console.log(res);
+                    this.SongUrl = res.data[0]
+                    //console.log(this.SongUrl);
                 })
             },
 

@@ -2,7 +2,7 @@
     <div class="new-song">
         <div class="text">最新音乐</div>
         <template class="song">
-            <div v-for="(item,index) in newSongList" :key="index" class="song-list" @click="clickSongs(item.id)">
+            <div v-for="(item,index) in newSongList" :key="index" class="song-list" @dblclick="clickSongs(item.id)">
                 <div class="frist-span">{{index + 1}}</div>
                 <img :src="item.picUrl" alt="">
                <div class="infrom">
