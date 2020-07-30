@@ -33,7 +33,8 @@
                 broadcast:[],
                 newSongList:[],
                 songID:null,
-                SongUrl:null
+                SongUrl:null,
+                song: []
 
 
             }
@@ -66,7 +67,6 @@
                     for(let i = 0; i<res.result.length; i++){
                         this.infrom.push(res.result[i])
                     }
-                    console.log(this.infrom);
                 })
             },
             //3.获取独家放送数据
@@ -80,15 +80,16 @@
             //4.获取最新音乐数据
             getNewSong() {
                 _getNewSong().then(res =>{
+                   // console.log(res);
                     for(let i = 0; i < res.result.length; i++){
                         this.newSongList.push(res.result[i])
                     }
                 })
             },
             //5.获取音乐的url地址
-            getSongUrl() {
-                _getSongUrl(this.songID).then(res =>{
-                    //console.log(res);
+            getSongUrl(id) {
+                _getSongUrl(id).then(res =>{
+                    console.log(res);
                     this.SongUrl = res.data[0]
                     //console.log(this.SongUrl);
                 })
@@ -97,10 +98,16 @@
 
             //点击歌曲后获取当前歌曲id
             clickSongs(id) {
-                this.songID = id
-                this.getSongUrl()
+                this.getSongUrl(id)
                 //console.log(this.SongUrl);
-                this.$bus.$emit("clickSongs",this.SongUrl)
+                this.song =this.newSongList.filter(function (item) {
+                    return item.id == id;
+                })
+                //this.SongUrl.push(this.song.name)
+                console.log(this.SongUrl);
+                if(this.SongUrl){
+                    this.$bus.$emit("clickSongs",this.SongUrl,this.song)
+                }
             }
 
         }

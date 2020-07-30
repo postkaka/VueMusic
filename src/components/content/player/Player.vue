@@ -1,10 +1,10 @@
 <template>
     <div class="player">
         <div class="img">
-            <img src="" alt="">
-            <div></div>
+            <img :src="url()" alt="">
+            <div>{{name()}}</div>
         </div>
-        <audio :src="audioPlay()" autoplay ref="audio"
+        <audio :src="audioPlay()" autoplay ref="audio" loop
             @canplay="getDuration"
                @ended="airTimeClear"
         ></audio>
@@ -71,7 +71,7 @@
         name: "Player",
         data() {
             return {
-                Url: null,
+                Url: [],
                 circleLeft: 280,
                 airTime: 0,
                 currentIndex:0,
@@ -81,30 +81,49 @@
                 hudsLeft: 100,
                 endTime: 0,
                 volumeIndex: 1.0,
-                play: 0
+                play: 0,
+                timer:null,
+                song:[],
+                errorImg: 'this.src="' + require('../../../assets/img/playmusic/back.jpg') + '"'
 
             }
         },
         mounted() {
-            this.$bus.$on("clickSongs", (SongUrl) => {
-                this.Url = SongUrl
+            this.$bus.$on("clickSongs", (SongUrl,song) => {
+                if(this.Url.length < 1){
+                    this.Url.push(SongUrl)
+                    this.song = song
+                    console.log(this.Url);
+                    console.log(song);
+                }else {
+                    this.Url.push(SongUrl);
+                    this.song = song
+                    console.log(this.Url);
+                    console.log(song);
+                    this.emptyPlay()
+                }
+
             })
         },
         methods: {
             timerClick(){
+                let lift = this.$refs.progress.offsetWidth
+                let conceal = this.$refs.conceal.offsetWidth
+                let speed = (lift-conceal)/(this.endTime-this.airTime)
+
                 if(this.play !==1){
                     this.play = 1
                     this.$refs.audio.play()
-                    let lift = this.$refs.progress.offsetWidth
-                    //console.log(lift);
+
                     if(this.airTime < this.endTime){
-                        let timer = setInterval(()=>{
-                            this.airTime ++
+                        this.timer = setInterval(()=>{
+                            this.airTime = parseInt(this.$refs.audio.currentTime)
                             //播放的小球每次移动速度等于播放进度除当前播放歌曲长度
-                            this.circleLeft += (lift/this.endTime)
+                            this.circleLeft += speed
                             if(this.airTime === this.endTime){
-                                clearInterval(timer)
+                                clearInterval(this.timer)
                                 this.circleLeft = 280;
+                                this.airTime = 0
                             }
                         },1000)
                     }
@@ -112,14 +131,12 @@
                 else{
                     this.play = 0;
                     this.$refs.audio.pause();
-                    console.log(this.timer);
+                    clearInterval(this.timer)
                 }
 
             },
             pausePlay(){
                 this.play = 0
-
-
             },
             volumeClick(){
                 if(this.currentIndex == 0){
@@ -160,7 +177,10 @@
                 return h+':'+s;
             },
             audioPlay(){
-                if(this.Url){
+                if(this.Url.length > 1){
+                    let i = this.Url.length -1;
+                    return this.Url[i].url
+                }else if(this.Url.length = 1) {
                     return this.Url.url
                 }
             },
@@ -176,10 +196,30 @@
             //当前音频播放结束后
             airTimeClear(){
                 console.log("播放结束");
-                this.airTime = 0
+                console.log(this.Url);
+            },
+            //当将新的歌曲加入播放队列触发
+            emptyPlay() {
+                this.play = 0;
+                this.$refs.audio.pause();
+                clearInterval(this.timer);
+                this.circleLeft = 280;
+                this.airTime = 0;
+                this.audioPlay();
+            },
+            url(){
+                if(this.song[0]){
+                  return  this.song[0].picUrl
+                }else  {
+                    return this.errorImg
+                }
+            },
+            name(){
+                if(this.song[0]){
+                    return this.song[0].name
+                }
             }
-        },
-
+        }
     }
 </script>
 
@@ -213,6 +253,13 @@
     .img {
         position: absolute;
         bottom: 49px;
+    }
+    .img img{
+        height: 100px;
+        width: 100px;
+    }
+    .img div {
+        color: white;
     }
     .timer {
         display: flex;
