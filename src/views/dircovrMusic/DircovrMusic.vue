@@ -89,7 +89,7 @@
             //5.获取音乐的url地址
             getSongUrl(id) {
                 _getSongUrl(id).then(res =>{
-                    console.log(res);
+                   // console.log(res);
                     this.SongUrl = res.data[0]
                     //console.log(this.SongUrl);
                 })
@@ -104,10 +104,11 @@
                     return item.id == id;
                 })
                 //this.SongUrl.push(this.song.name)
-                console.log(this.SongUrl);
-                if(this.SongUrl){
+                //console.log(this.SongUrl);
+                let timer = setTimeout(() =>{
                     this.$bus.$emit("clickSongs",this.SongUrl,this.song)
-                }
+                },500)
+
             }
 
         }

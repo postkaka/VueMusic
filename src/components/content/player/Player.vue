@@ -1,12 +1,12 @@
 <template>
     <div class="player">
         <div class="img">
-            <img :src="url()" alt="">
-            <div>{{name()}}</div>
+            <img :src="url(this.times)" alt="">
+            <div>{{name(this.times)}}</div>
         </div>
-        <audio :src="audioPlay()" autoplay ref="audio" loop
-            @canplay="getDuration"
-               @ended="airTimeClear"
+        <audio :src="audioPlay(this.times)" autoplay ref="audio"
+                @canplay="getDuration"
+                @ended="airTimeClear"
         ></audio>
        <div class="play-list">
            <div class="play">
@@ -24,7 +24,7 @@
                <div class="airTime">{{MillisecondToDate(airTime)}}</div>
                <div class="timer-bar" >
                    <div class="progress-bar" ref="progress"></div>
-                   <div class="circle"  ref="circle" :style="{left:circleLeft + 'px'}"></div>
+                   <div class="circle"  ref="circle" :style="{left:circleLeft + 'px'}" v-drag></div>
                    <div class="conceal" :style="{width: (circleLeft-280) + 'px'}" ref="conceal"></div>
                </div>
                <div class="lastTime">{{ MillisecondToDate(endTime)}}</div>
@@ -83,24 +83,27 @@
                 volumeIndex: 1.0,
                 play: 0,
                 timer:null,
-                song:[],
-                errorImg: 'this.src="' + require('../../../assets/img/playmusic/back.jpg') + '"'
+                errorImg: 'this.src="' + require('../../../assets/img/playmusic/back.jpg') + '"',
+                times: 0
 
             }
         },
         mounted() {
             this.$bus.$on("clickSongs", (SongUrl,song) => {
+                let songs = { url:"", name:'', picUrl:'',}
                 if(this.Url.length < 1){
-                    this.Url.push(SongUrl)
-                    this.song = song
+                    songs.url = SongUrl.url
+                    songs.name = song[0].name
+                    songs.picUrl = song[0].picUrl
+                    this.Url.push(songs)
                     console.log(this.Url);
-                    console.log(song);
                 }else {
-                    this.Url.push(SongUrl);
-                    this.song = song
-                    console.log(this.Url);
-                    console.log(song);
+                    songs.url = SongUrl.url
+                    songs.name = song[0].name
+                    songs.picUrl = song[0].picUrl
+                    this.Url.push(songs)
                     this.emptyPlay()
+                    console.log(this.Url);
                 }
 
             })
@@ -122,6 +125,7 @@
                             this.circleLeft += speed
                             if(this.airTime === this.endTime){
                                 clearInterval(this.timer)
+                                console.log("暂停了");
                                 this.circleLeft = 280;
                                 this.airTime = 0
                             }
@@ -176,12 +180,9 @@
                 s  =   (s.length==1)?'0'+s:s;
                 return h+':'+s;
             },
-            audioPlay(){
-                if(this.Url.length > 1){
-                    let i = this.Url.length -1;
-                    return this.Url[i].url
-                }else if(this.Url.length = 1) {
-                    return this.Url.url
+            audioPlay(index){
+                if(this.Url[index]){
+                    return this.Url[index].url
                 }
             },
 
@@ -190,13 +191,25 @@
                 //console.log(parseInt(this.$refs.audio.duration));
                 this.endTime = parseInt(this.$refs.audio.duration);
                 this.timerClick();
-
             },
 
             //当前音频播放结束后
             airTimeClear(){
-                console.log("播放结束");
-                console.log(this.Url);
+                //console.log("播放结束");
+               // console.log(this.Url);
+                //默认循序播放
+                if(this.fis == 1 && this.sec == 0 && this.thi == 0){
+                    this.restoration()
+                }else if(this.fis == 0 && this.sec == 1 && this.thi ==0){
+                    //单曲循环模式
+                    this.restoration();
+                    console.log("单曲循环");
+                    this.timerClick();
+                }else {
+                    //随机播放模式
+                    this.restoration()
+                }
+
             },
             //当将新的歌曲加入播放队列触发
             emptyPlay() {
@@ -205,18 +218,38 @@
                 clearInterval(this.timer);
                 this.circleLeft = 280;
                 this.airTime = 0;
-                this.audioPlay();
+                this.times += 1;
+                this.$refs.audio.src = this.Url[this.times].url
             },
-            url(){
-                if(this.song[0]){
-                  return  this.song[0].picUrl
+            url(index){
+                if(this.Url[index]){
+                  return  this.Url[index].picUrl
                 }else  {
                     return this.errorImg
                 }
             },
-            name(){
-                if(this.song[0]){
-                    return this.song[0].name
+            name(index){
+                if(this.Url[index]){
+                    return this.Url[index].name
+                }
+            },
+            //播放器复位
+            restoration() {
+                clearInterval(this.timer)
+                this.circleLeft = 280;
+                this.airTime = 0;
+            }
+        },
+        directives:{
+            drag(el,bindings) {
+                el.onmousedown = function (e) {
+                    let  disX = e.pageX - el.offsetLeft;
+                    document.onmousemove = function (e) {
+                        el.style.left = e.pageX -disX + "px"
+                    }
+                    document.onmouseup = function () {
+                        document.onmousemove = document.onmouseup = null;
+                    }
                 }
             }
         }
