@@ -21,7 +21,7 @@
     import musicList from "../../components/content/musiclist/musicList";
     import exclusive from "./childeComps/exclusive";
     import NewSong from "./childeComps/NewSong";
-    import {_getBanner,_getPrivatecontent,_getrecommend,_getNewSong,_getSongUrl} from "../../network/dircoverMusic";
+    import {_getBanner,_getPrivatecontent,_getrecommend,_getNewSong,_getSongUrl,_getLyric} from "../../network/dircoverMusic";
     import Swiper from "../../components/common/swiper/swiper";
 
     export default {
@@ -34,7 +34,8 @@
                 newSongList:[],
                 songID:null,
                 SongUrl:null,
-                song: []
+                song: [],
+                lyric: []
 
 
             }
@@ -94,11 +95,17 @@
                     //console.log(this.SongUrl);
                 })
             },
-
+            //6.获取歌词的数据
+            getLyric(id) {
+                _getLyric(id).then(res =>{
+                    this.lyric = res
+                })
+            },
 
             //点击歌曲后获取当前歌曲id
             clickSongs(id) {
                 this.getSongUrl(id)
+                this.getLyric(id)
                 //console.log(this.SongUrl);
                 this.song =this.newSongList.filter(function (item) {
                     return item.id == id;
@@ -106,7 +113,7 @@
                 //this.SongUrl.push(this.song.name)
                 //console.log(this.SongUrl);
                 let timer = setTimeout(() =>{
-                    this.$bus.$emit("clickSongs",this.SongUrl,this.song)
+                    this.$bus.$emit("clickSongs",this.SongUrl,this.song,this.lyric)
                 },500)
 
             }

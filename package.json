@@ -11,6 +11,7 @@
     "better-scroll": "^1.15.2",
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
+    "lyric-parser": "^1.0.1",
     "vue": "^2.6.11",
     "vue-router": "^3.3.4"
   },

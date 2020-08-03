@@ -10,7 +10,9 @@
         ></audio>
        <div class="play-list">
            <div class="play">
-               <img src="../../../assets/img/playmusic/pre.png" alt="">
+               <img src="../../../assets/img/playmusic/pre.png" alt=""
+                    @click="Previous"
+               >
                <img src="../../../assets/img/playmusic/play.png" alt=""
                     :class="{active: play !== 0}"
                     @click="timerClick">
@@ -18,7 +20,9 @@
                     :class="{active: play === 0}"
                     @click="timerClick"
                >
-               <img src="../../../assets/img/playmusic/next.png" alt="">
+               <img src="../../../assets/img/playmusic/next.png" alt=""
+                    @click="next"
+               >
            </div>
            <div class="timer">
                <div class="airTime">{{MillisecondToDate(airTime)}}</div>
@@ -59,7 +63,23 @@
                         @click="endClick"
                    >
                    <img src="../../../assets/img/playmusic/geciweidianji.svg" alt="">
-                   <img src="../../../assets/img/playmusic/bofangliebiao.svg" alt="">
+                   <img src="../../../assets/img/playmusic/bofangliebiao.svg" alt=""
+                        @click="songsList"
+                   >
+                   <div class="songsList" :class="{active: reveal === 0}">
+                       <table>
+                           <tr>
+                               <td>播放列表({{Url.length}})</td>
+                               <td></td>
+                               <td></td>
+                           </tr>
+                           <tr v-for="(item,index) in Url" :key="index">
+                               <td>{{item.name}}</td>
+                               <td>{{item.artists}}</td>
+                               <td></td>
+                           </tr>
+                       </table>
+                   </div>
                </div>
            </div>
        </div>
@@ -67,6 +87,7 @@
 </template>
 
 <script>
+    import Lyric from 'lyric-parser'
     export default {
         name: "Player",
         data() {
@@ -84,26 +105,50 @@
                 play: 0,
                 timer:null,
                 errorImg: 'this.src="' + require('../../../assets/img/playmusic/back.jpg') + '"',
-                times: 0
+                times: 0,
+                reveal: 0,
+                exist: null
 
             }
         },
         mounted() {
-            this.$bus.$on("clickSongs", (SongUrl,song) => {
-                let songs = { url:"", name:'', picUrl:'',}
+            this.$bus.$on("clickSongs", (SongUrl,song,lyric) => {
+                let songs = { artists:'',name:"", picUrl:'', url:'',lyric: ''}
                 if(this.Url.length < 1){
+                    songs.artists = song[0].song.artists[0].name
                     songs.url = SongUrl.url
                     songs.name = song[0].name
                     songs.picUrl = song[0].picUrl
+                    songs.lyric = lyric.lrc
                     this.Url.push(songs)
                     console.log(this.Url);
+                    console.log(songs.lyric.lyric);
                 }else {
+                    songs.artists = song[0].song.artists[0].name
                     songs.url = SongUrl.url
                     songs.name = song[0].name
                     songs.picUrl = song[0].picUrl
-                    this.Url.push(songs)
-                    this.emptyPlay()
-                    console.log(this.Url);
+                    songs.lyric = lyric.lrc
+                    //判断一下当前加入的列表的歌曲是否重复,如果重复清空songs
+                    for (let i = 0; i < this.Url.length ; i++){
+                        if(this.Url[i].artists === songs.artists){
+                            this.exist = i;
+                            console.log(this.exist);
+                            console.log(this.Url);
+                            songs = 0
+                        }
+                    }
+
+                    if(songs === 0){
+                        this.emptyPlay()
+                        console.log('重复了');
+                    } else{
+                        this.Url.push(songs)
+                        this.emptyPlay()
+                        console.log("没重复");
+                        console.log(this.Url);
+                    }
+
                 }
 
             })
@@ -200,14 +245,50 @@
                 //默认循序播放
                 if(this.fis == 1 && this.sec == 0 && this.thi == 0){
                     this.restoration()
+                    console.log("顺序播放");
+                    if(this.Url.length > 1 ){
+                        if(this.times+1 === this.Url.length){
+                            this.restoration()
+                            this.timerClick()
+                            console.log(this.times);
+                        } else {
+                            this.times = this.times + 1
+                            console.log(this.times);
+                            this.$refs.audio.src = this.Url[this.times].url;
+                            this.timerClick()
+                            setTimeout(() => {
+                                this.$refs.audio.play()
+                            },500)
+                        }
+                    }else {
+                        this.restoration()
+                        this.timerClick()
+                    }
                 }else if(this.fis == 0 && this.sec == 1 && this.thi ==0){
                     //单曲循环模式
                     this.restoration();
-                    console.log("单曲循环");
                     this.timerClick();
+                    this.$refs.audio.play()
+                    console.log("单曲循环");
+
                 }else {
                     //随机播放模式
+
                     this.restoration()
+                    console.log("随机播放");
+                    if(this.Url.length > 1){
+                        let newTimes = Math.floor(Math.random()*this.Url.length);
+                        this.times = newTimes
+                        this.$refs.audio.src = this.Url[this.times].url;
+                        this.timerClick();
+                        setTimeout(() => {
+                            this.$refs.audio.play()
+                        },500)
+                    }else {
+                        this.restoration();
+                        this.timerClick();
+                        this.$refs.audio.play()
+                    }
                 }
 
             },
@@ -218,8 +299,14 @@
                 clearInterval(this.timer);
                 this.circleLeft = 280;
                 this.airTime = 0;
-                this.times += 1;
-                this.$refs.audio.src = this.Url[this.times].url
+                if(this.exist === null){
+                    this.times += 1;
+                    this.$refs.audio.src = this.Url[this.times].url
+                } else {
+                    this.times = this.exist;
+                    this.$refs.audio.src = this.Url[this.times].url
+                }
+
             },
             url(index){
                 if(this.Url[index]){
@@ -238,6 +325,50 @@
                 clearInterval(this.timer)
                 this.circleLeft = 280;
                 this.airTime = 0;
+            },
+
+            //上一首
+            Previous() {
+                if(this.times !== 0 ){
+                        this.times = this.times - 1
+                        console.log(this.times);
+                        this.restoration()
+                        this.$refs.audio.src = this.Url[this.times].url;
+                        this.timerClick();
+                        setTimeout(() =>{
+                            this.$refs.audio.play()
+                        },500)
+                    }
+                else {
+                    this.restoration()
+                    this.timerClick();
+                    alert("列表里面没有其他音乐了")
+                }
+            },
+            //下一首
+            next(){
+                if(this.times+1 < this.Url.length){
+                    this.times = this.times + 1;
+                    console.log(this.times);
+                    this.restoration()
+                    this.$refs.audio.src = this.Url[this.times].url;
+                    this.timerClick();
+                    setTimeout(() =>{
+                        this.$refs.audio.play()
+                    },500)
+                } else{
+                    this.restoration()
+                    this.timerClick();
+                    alert("列表里面没有其他音乐了")
+                }
+            },
+            //点击切换歌曲列表
+            songsList(){
+                if(this.reveal == 0){
+                    this.reveal = 1
+                }else {
+                    this.reveal = 0
+                }
             }
         },
         directives:{
@@ -408,5 +539,12 @@
     }
     .active {
         display: none;
+    }
+    .songsList {
+        width: 800px;
+        position: absolute;
+        bottom: 49px;
+        background-color: #212124;
+        color: white;
     }
 </style>

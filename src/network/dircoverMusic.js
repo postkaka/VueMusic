@@ -76,3 +76,13 @@ export function _getRadio() {
         url:'/dj/hot'
     })
 }
+
+//获取歌词数据
+export function _getLyric(id) {
+    return request({
+        url:'/lyric',
+        params: {
+            id: id
+        }
+    })
+}
