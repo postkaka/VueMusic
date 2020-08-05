@@ -15,7 +15,7 @@
                     <img src="../../../assets/img/detail/xin.svg" alt="">
                     <img src="../../../assets/img/detail/xiazai.svg" alt="">
                 </td>
-                <td>{{item.name}}</td>
+                <td @dblclick="itemClick(item.id)" click>{{item.name}}</td>
                 <td>{{item.ar[0].name}}</td>
                 <td>{{item.alia[0]}}</td>
                 <td>{{0+MillisecondToDate(item.dt)}}</td>
@@ -44,6 +44,9 @@
                     :parseInt((parseFloat(time / 60.0) - parseInt(time / 60.0)) * 60)  );
 
                 return time;
+            },
+            itemClick(id){
+                this.$emit("itemClick",id)
             }
         }
     }

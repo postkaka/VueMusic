@@ -28,7 +28,12 @@
                <div class="airTime">{{MillisecondToDate(airTime)}}</div>
                <div class="timer-bar" >
                    <div class="progress-bar" ref="progress"></div>
-                   <div class="circle"  ref="circle" :style="{left:circleLeft + 'px'}" v-drag></div>
+                   <div class="circle"  ref="circle"
+                        :style="{left:circleLeft + 'px'}"
+                        @mousedown="circleDown"
+                        @mouseout="circleUp"
+                        @mousemove="circleMove"
+                   ></div>
                    <div class="conceal" :style="{width: (circleLeft-280) + 'px'}" ref="conceal"></div>
                </div>
                <div class="lastTime">{{ MillisecondToDate(endTime)}}</div>
@@ -87,7 +92,7 @@
 </template>
 
 <script>
-    import Lyric from 'lyric-parser'
+
     export default {
         name: "Player",
         data() {
@@ -107,7 +112,8 @@
                 errorImg: 'this.src="' + require('../../../assets/img/playmusic/back.jpg') + '"',
                 times: 0,
                 reveal: 0,
-                exist: null
+                exist: '',
+                ifDrag: false,
 
             }
         },
@@ -115,20 +121,20 @@
             this.$bus.$on("clickSongs", (SongUrl,song,lyric) => {
                 let songs = { artists:'',name:"", picUrl:'', url:'',lyric: ''}
                 if(this.Url.length < 1){
-                    songs.artists = song[0].song.artists[0].name
+                   // songs.artists = song[0].song.artists[0].name
                     songs.url = SongUrl.url
-                    songs.name = song[0].name
-                    songs.picUrl = song[0].picUrl
+                   // songs.name = song[0].name
+                   // songs.picUrl = song[0].picUrl
                     songs.lyric = lyric.lrc
                     this.Url.push(songs)
                     console.log(this.Url);
                     console.log(songs.lyric.lyric);
                 }else {
-                    songs.artists = song[0].song.artists[0].name
+                   // songs.artists = song[0].song.artists[0].name
                     songs.url = SongUrl.url
-                    songs.name = song[0].name
-                    songs.picUrl = song[0].picUrl
-                    songs.lyric = lyric.lrc
+                   // songs.name = song[0].name
+                   //  songs.picUrl = song[0].picUrl
+                   //  songs.lyric = lyric.lrc
                     //判断一下当前加入的列表的歌曲是否重复,如果重复清空songs
                     for (let i = 0; i < this.Url.length ; i++){
                         if(this.Url[i].artists === songs.artists){
@@ -229,6 +235,7 @@
                 if(this.Url[index]){
                     return this.Url[index].url
                 }
+
             },
 
             //获取当前播发歌曲长度（秒数）
@@ -292,6 +299,31 @@
                 }
 
             },
+
+            //监听鼠标点击小球
+            circleDown(event){
+                //console.log("点击你了");
+                // console.log(event.clientX);
+                this.ifDrag = true
+            },
+            //监听鼠标离开小球
+            circleUp(){
+                //console.log("离开你了");
+                this.ifDrag = false
+
+            },
+            //监听鼠标在小球上的移动
+            circleMove(event){
+                let seat = this.$refs.progress.offsetWidth % parseInt(this.$refs.audio.duration);
+                console.log(seat);
+                if(this.ifDrag){
+                    this.circleLeft = event.clientX-8
+                    this.$refs.audio.currentTime = parseInt(this.circleLeft % seat)
+                }else{
+                    console.log("不移动");
+                }
+            },
+
             //当将新的歌曲加入播放队列触发
             emptyPlay() {
                 this.play = 0;
@@ -299,11 +331,12 @@
                 clearInterval(this.timer);
                 this.circleLeft = 280;
                 this.airTime = 0;
-                if(this.exist === null){
+                if(this.exist == ''){
                     this.times += 1;
                     this.$refs.audio.src = this.Url[this.times].url
                 } else {
                     this.times = this.exist;
+                    this.exist = ''
                     this.$refs.audio.src = this.Url[this.times].url
                 }
 
@@ -371,19 +404,14 @@
                 }
             }
         },
-        directives:{
-            drag(el,bindings) {
-                el.onmousedown = function (e) {
-                    let  disX = e.pageX - el.offsetLeft;
-                    document.onmousemove = function (e) {
-                        el.style.left = e.pageX -disX + "px"
-                    }
-                    document.onmouseup = function () {
-                        document.onmousemove = document.onmouseup = null;
-                    }
+        watch: {
+            circleLeft(val,oldVal){
+                if(val === this.$refs.progress.offsetWidth + 280 ){
+                    this.ifDrag = false
                 }
             }
         }
+
     }
 </script>
 

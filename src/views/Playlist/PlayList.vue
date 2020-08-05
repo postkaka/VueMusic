@@ -36,7 +36,7 @@
                <div >{{item}}</div>
            </div>
        </div>
-        <play-list-item :tracks="playlist.tracks" :class="{condition: currentIndex !== 0}"></play-list-item>
+        <play-list-item :tracks="playlist.tracks" :class="{condition: currentIndex !== 0}" @itemClick="clickSongs(id)"></play-list-item>
         <comment :class="{condition: currentIndex !== 1}" :comment="comment" class="comment"></comment>
         <subscribers :class="{condition: currentIndex !== 2}" :subscribers="subscribers" class="subscribers"></subscribers>
     </div>
@@ -47,6 +47,8 @@
     import PlayListItem from "./childeComps/PlayListItem";
     import comment from "./childeComps/comment";
     import Subscribers from "./childeComps/Subscribers";
+    import {songsMixin} from "../../common/mixin";
+
     export default {
         name: "PlayList",
         data(){
@@ -56,9 +58,10 @@
                 tab:["歌曲列表","评论","收藏者"],
                 currentIndex: 0,
                 comment: [],
-                subscribers: []
+                subscribers: [],
             }
         },
+        mixins:[songsMixin],
         components: {
             PlayListItem,
             comment,
@@ -76,7 +79,7 @@
                 _getPlayList(id).then(res =>{
                     //console.log(res.playlist);
                     this.playlist = res.playlist
-                    //console.log(this.playlist);
+                    console.log(this.playlist);
                 })
             },
             itemClick(index){
@@ -96,10 +99,14 @@
                     //console.log(res);
                     this.subscribers = res.subscribers
                 })
+            },
+
+            playlistClick(id){
+                console.log(id);
+                this.getSongUrl(id)
             }
+        },
 
-
-        }
     }
 </script>
 

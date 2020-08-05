@@ -21,8 +21,9 @@
     import musicList from "../../components/content/musiclist/musicList";
     import exclusive from "./childeComps/exclusive";
     import NewSong from "./childeComps/NewSong";
-    import {_getBanner,_getPrivatecontent,_getrecommend,_getNewSong,_getSongUrl,_getLyric} from "../../network/dircoverMusic";
+    import {_getBanner,_getPrivatecontent,_getrecommend,_getNewSong} from "../../network/dircoverMusic";
     import Swiper from "../../components/common/swiper/swiper";
+    import {songsMixin} from "../../common/mixin";
 
     export default {
         name: "DircovrMusic",
@@ -33,13 +34,12 @@
                 broadcast:[],
                 newSongList:[],
                 songID:null,
-                SongUrl:null,
-                song: [],
-                lyric: []
+               // song: [],
 
 
             }
         },
+        mixins:[songsMixin],
         components: {
             Swiper,
             exclusive,
@@ -88,35 +88,35 @@
                 })
             },
             //5.获取音乐的url地址
-            getSongUrl(id) {
-                _getSongUrl(id).then(res =>{
-                   // console.log(res);
-                    this.SongUrl = res.data[0]
-                    //console.log(this.SongUrl);
-                })
-            },
+            // getSongUrl(id) {
+            //     _getSongUrl(id).then(res =>{
+            //        // console.log(res);
+            //         this.SongUrl = res.data[0]
+            //         //console.log(this.SongUrl);
+            //     })
+            // },
             //6.获取歌词的数据
-            getLyric(id) {
-                _getLyric(id).then(res =>{
-                    this.lyric = res
-                })
-            },
+            // getLyric(id) {
+            //     _getLyric(id).then(res =>{
+            //         this.lyric = res
+            //     })
+            // },
 
             //点击歌曲后获取当前歌曲id
-            clickSongs(id) {
-                this.getSongUrl(id)
-                this.getLyric(id)
-                //console.log(this.SongUrl);
-                this.song =this.newSongList.filter(function (item) {
-                    return item.id == id;
-                })
-                //this.SongUrl.push(this.song.name)
-                //console.log(this.SongUrl);
-                let timer = setTimeout(() =>{
-                    this.$bus.$emit("clickSongs",this.SongUrl,this.song,this.lyric)
-                },500)
-
-            }
+            // clickSongs(id) {
+            //     this.getSongUrl(id)
+            //     this.getLyric(id)
+            //     //console.log(this.SongUrl);
+            //     this.song =this.newSongList.filter(function (item) {
+            //         return item.id == id;
+            //     })
+            //     //this.SongUrl.push(this.song.name)
+            //     //console.log(this.SongUrl);
+            //     let timer = setTimeout(() =>{
+            //         this.$bus.$emit("clickSongs",this.SongUrl,this.song,this.lyric)
+            //     },500)
+            //
+            // }
 
         }
     }
