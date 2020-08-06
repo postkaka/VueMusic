@@ -4,7 +4,7 @@
             <tr v-for="(item,index) in songList" :key="index" class="_tr">
                 <td class="num">{{numberId(index + 1)}}</td>
                 <td><img :src="item.album.picUrl" alt=""></td>
-                <td>{{item.name}}</td>
+                <td  @dblclick="itemClick(item.id)">{{item.name}}</td>
                 <td>{{item.album.name}}</td>
                 <td>0{{MillisecondToDate(item.duration)}}</td>
             </tr>
@@ -40,8 +40,11 @@
                         :parseInt((parseFloat(time / 60.0) - parseInt(time / 60.0)) * 60)  );
 
                     return time;
-    }
-    }
+    },
+            itemClick(id){
+                this.$emit("itemClick",id)
+            }
+    },
     }
 </script>
 

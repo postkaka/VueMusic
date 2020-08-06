@@ -1,11 +1,14 @@
-import {_getSongUrl,_getLyric} from "../network/dircoverMusic";
+import {_getSongUrl,_getLyric,} from "../network/dircoverMusic";
+import {_getDetail} from "../network/PlayList";
 
 export const songsMixin = {
     data() {
         return {
             SongUrl : null,
             lyric: [],
-            song:[]
+            song:[
+                {picUrl:'',name:'',song:{}}
+            ]
         }
     },
     methods: {
@@ -23,6 +26,15 @@ export const songsMixin = {
                 this.lyric = res
             })
         },
+        //获取歌曲详细信息
+        getDetail(id) {
+          _getDetail(id).then(res =>{
+              this.song[0].picUrl =res.songs[0].al.picUrl;
+              this.song[0].name = res.songs[0].name
+              this.song[0].song.artists = res.songs[0].ar[0].name
+              console.log(this.song);
+          })
+        },
 
        // 返回歌曲数据
         clickSongs(id) {
@@ -33,13 +45,9 @@ export const songsMixin = {
                 this.song =this.newSongList.filter(function (item) {
                     return item.id == id;
                 })
-            } else {
-               let oldSong = this.playlist.tracks.filter(function (item) {
-                   return item.id == id;
-               })
-                this.song.push(oldSong.name)
+            } else{
+                this.getDetail(id)
             }
-
 
             let timer = setTimeout(() =>{
                 this.$bus.$emit("clickSongs",this.SongUrl,this.song,this.lyric)

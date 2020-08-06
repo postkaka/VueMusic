@@ -36,7 +36,7 @@
                <div >{{item}}</div>
            </div>
        </div>
-        <play-list-item :tracks="playlist.tracks" :class="{condition: currentIndex !== 0}" @itemClick="clickSongs(id)"></play-list-item>
+        <play-list-item :tracks="playlist.tracks" :class="{condition: currentIndex !== 0}" @itemClick="clickSongs"></play-list-item>
         <comment :class="{condition: currentIndex !== 1}" :comment="comment" class="comment"></comment>
         <subscribers :class="{condition: currentIndex !== 2}" :subscribers="subscribers" class="subscribers"></subscribers>
     </div>

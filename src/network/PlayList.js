@@ -27,3 +27,12 @@ export function _getSubscribers(id,limit) {
         }
     })
 }
+//歌曲详细信息 
+export function _getDetail(ids) {
+    return request({
+        url: '/song/detail',
+        params: {
+            ids: ids
+        }
+    })
+}

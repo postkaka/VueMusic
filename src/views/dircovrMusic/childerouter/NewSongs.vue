@@ -15,13 +15,14 @@
                 <div>播放全部</div>
             </div>
         </div>
-        <new-songs-list class="new-songs-list" :song-list="songList"></new-songs-list>
+        <new-songs-list class="new-songs-list" :song-list="songList" @itemClick="clickSongs"></new-songs-list>
     </div>
 </template>
 
 <script>
     import NewSongsList from "../childeComps/NewSongsList";
     import {_getNewSongs} from "../../../network/dircoverMusic";
+    import {songsMixin} from "../../../common/mixin";
 
     export default {
         name: "NewSongs",
@@ -38,6 +39,7 @@
                 currentIndex: 0
             }
         },
+        mixins:[songsMixin],
         components: {
             NewSongsList
         },

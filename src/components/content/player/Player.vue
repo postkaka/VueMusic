@@ -37,6 +37,7 @@
                    <div class="conceal" :style="{width: (circleLeft-280) + 'px'}" ref="conceal"></div>
                </div>
                <div class="lastTime">{{ MillisecondToDate(endTime)}}</div>
+               <div class="lyricList" :class="{active: lyricList}"></div>
            </div>
            <div class="end">
                <div class="end-1">
@@ -67,7 +68,9 @@
                         :class="{active: thi === 0}"
                         @click="endClick"
                    >
-                   <img src="../../../assets/img/playmusic/geciweidianji.svg" alt="">
+                   <img src="../../../assets/img/playmusic/geciweidianji.svg" alt=""
+                        @click="lyricClick"
+                   >
                    <img src="../../../assets/img/playmusic/bofangliebiao.svg" alt=""
                         @click="songsList"
                    >
@@ -114,6 +117,8 @@
                 reveal: 0,
                 exist: '',
                 ifDrag: false,
+                lyricList: false,
+
 
             }
         },
@@ -121,23 +126,23 @@
             this.$bus.$on("clickSongs", (SongUrl,song,lyric) => {
                 let songs = { artists:'',name:"", picUrl:'', url:'',lyric: ''}
                 if(this.Url.length < 1){
-                   // songs.artists = song[0].song.artists[0].name
+                    songs.artists = song[0].song.artists[0].name
                     songs.url = SongUrl.url
-                   // songs.name = song[0].name
-                   // songs.picUrl = song[0].picUrl
+                    songs.name = song[0].name
+                   songs.picUrl = song[0].picUrl
                     songs.lyric = lyric.lrc
                     this.Url.push(songs)
                     console.log(this.Url);
                     console.log(songs.lyric.lyric);
                 }else {
-                   // songs.artists = song[0].song.artists[0].name
+                    songs.artists = song[0].song.artists[0].name
                     songs.url = SongUrl.url
-                   // songs.name = song[0].name
-                   //  songs.picUrl = song[0].picUrl
-                   //  songs.lyric = lyric.lrc
+                    songs.name = song[0].name
+                    songs.picUrl = song[0].picUrl
+                    songs.lyric = lyric.lrc
                     //判断一下当前加入的列表的歌曲是否重复,如果重复清空songs
                     for (let i = 0; i < this.Url.length ; i++){
-                        if(this.Url[i].artists === songs.artists){
+                        if(this.Url[i].name === songs.name){
                             this.exist = i;
                             console.log(this.exist);
                             console.log(this.Url);
@@ -157,7 +162,8 @@
 
                 }
 
-            })
+            });
+
         },
         methods: {
             timerClick(){
@@ -402,6 +408,9 @@
                 }else {
                     this.reveal = 0
                 }
+            },
+            lyricClick(){
+                this.lyricList = !this.lyricList
             }
         },
         watch: {
@@ -574,5 +583,12 @@
         bottom: 49px;
         background-color: #212124;
         color: white;
+    }
+    .lyricList{
+        position: absolute;
+        bottom:49px;
+        height: 50px;
+        width: 100%;
+        background-color: white;
     }
 </style>
