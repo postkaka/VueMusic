@@ -32,7 +32,7 @@ export const songsMixin = {
               this.song[0].picUrl =res.songs[0].al.picUrl;
               this.song[0].name = res.songs[0].name
               this.song[0].song.artists = res.songs[0].ar[0].name
-              console.log(this.song);
+             // console.log(this.song);
           })
         },
 

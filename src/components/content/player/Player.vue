@@ -37,7 +37,7 @@
                    <div class="conceal" :style="{width: (circleLeft-280) + 'px'}" ref="conceal"></div>
                </div>
                <div class="lastTime">{{ MillisecondToDate(endTime)}}</div>
-               <div class="lyricList" :class="{active: lyricList}"></div>
+               <div class="lyricList" :class="{active: lyricList}">{{lyricItem()}}</div>
            </div>
            <div class="end">
                <div class="end-1">
@@ -117,9 +117,7 @@
                 reveal: 0,
                 exist: '',
                 ifDrag: false,
-                lyricList: false,
-
-
+                lyricList: true,
             }
         },
         mounted() {
@@ -411,6 +409,20 @@
             },
             lyricClick(){
                 this.lyricList = !this.lyricList
+            },
+            lyricItem(){
+                if(this.Url.length > 0){
+                    if(this.Url[this.times] !== null){
+                        return this.Url[this.times].lyric.lyric
+                        const regNewLine = /\n/
+                        const lineArr = this.Url[this.times].lyric.lyric.split(regNewLine) // 每行歌词的数组
+
+                    } else {
+                        return "抱歉歌曲暂无歌词"
+                    }
+                }else {
+                    return "无播放歌曲"
+                }
             }
         },
         watch: {
@@ -585,10 +597,12 @@
         color: white;
     }
     .lyricList{
-        position: absolute;
+        position:fixed;
         bottom:49px;
         height: 50px;
         width: 100%;
-        background-color: white;
+        font-size: 32px;
+        color: white;
+        background-color: black;
     }
 </style>
